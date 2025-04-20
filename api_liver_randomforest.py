@@ -7,11 +7,8 @@ import uvicorn
 import os
 from fastapi.middleware.cors import CORSMiddleware
 
+model = joblib.load(r"models/liver_model.pkl")
 
-# Load the saved model
-model = joblib.load("liver_model.pkl")
-
-# Define the API app
 app = FastAPI()
 
 app.add_middleware(
@@ -20,17 +17,16 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],)
-# Define the input structure
+
 class LiverInput(BaseModel):
     age: int
-    gender: int  # 0 for female, 1 for male
+    gender: int  
     total_bilirubin: float
     direct_bilirubin: float
     alkphos: int
     sgpt: int
     sgot: int
 
-# Define the prediction endpoint
 @app.post("/predict")
 def predict(data: LiverInput):
     input_data = np.array([[data.age, data.gender, data.total_bilirubin,
