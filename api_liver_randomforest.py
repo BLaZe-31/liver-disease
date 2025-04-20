@@ -27,6 +27,11 @@ class LiverInput(BaseModel):
     sgpt: int
     sgot: int
 
+@app.api_route("/ping", methods=["GET", "HEAD"])
+async def ping():
+    await asyncio.sleep(0.1)
+    return {"message": "server is running"}
+
 @app.post("/predict")
 def predict(data: LiverInput):
     input_data = np.array([[data.age, data.gender, data.total_bilirubin,
